@@ -15,13 +15,13 @@ class spider_Gui:
 
     def set_Input_Ready_Window():
         input_Ready_Layout =[
-            [sg.Text('請在開啟的網頁裡登入，並登入學生資料。')]
+            [sg.Text('請到新開啟的網頁中登入')]
         ]
         return sg.Window('準備爬取資料',input_Ready_Layout,finalize=True)
     
     def set_finish_Window(spider):
         finsih_Window_Layout =[
-            [sg.Text(f'已抓取完該學生課表資料，如果需要下一筆請到網頁登入下個學生的資料\n學生姓名：{spider.std_name}\t學號：{spider.std_id}\n學年：{spider.std_year}\t學期：{spider.std_season}\n請到程式目錄尋找 Word 檔：{spider.std_id} - {spider.std_name} - {spider.std_year} - {spider.std_season} 課表.docx')]
+            [sg.Text(f'###已抓取完該學生課表資料，如需下一筆請關閉 Word 後到網頁再次登入###\n學生姓名：{spider.std_name}\t學號：{spider.std_id}\n學年：{spider.std_year}\t學期：{spider.std_season}\n請到程式目錄尋找 Word 檔：{spider.std_id} - {spider.std_name} - {spider.std_year} - {spider.std_season} 課表.docx')]
         ]
         return sg.Window('完成爬取',finsih_Window_Layout,finalize=True,modal=True)
 
@@ -147,12 +147,14 @@ class classMenu_Spider:
         except selenium.common.exceptions.TimeoutException:
             print('尚未找到課表元素！')
             return False
+        except selenium.common.exceptions.UnexpectedAlertPresentException:
+            return False
+            pass
         except selenium.common.exceptions.WebDriverException:
-                sys.exit()
+            sys.exit()
 
     def showing_data(self):
-        print('已找到課表元素！')
-        print(f'姓名：{self.std_name}\t學號：{self.std_id}')
+        sg.popup_notify(f'姓名：{self.std_name}\t學號：{self.std_id}',title='已找到課表！',display_duration_in_ms=150,fade_in_duration=150)
         pass
 
     def waiting_Input(self):
