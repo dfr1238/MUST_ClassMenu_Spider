@@ -153,15 +153,6 @@ class classMenu_Spider:
     def showing_data(self):
         print('已找到課表元素！')
         print(f'姓名：{self.std_name}\t學號：{self.std_id}')
-        date_heading=[['時段'],['星期一'],['星期二'],['星期三'],['星期四'],['星期五'],['星期六'],['星期日']]
-        print(date_heading)
-        for row in self.table_TrList:
-            tdlist = row.find_elements_by_tag_name('td')
-            for td in tdlist:
-                temp_text = td.text.split("\n")
-                del temp_text[1:3]
-                print(temp_text,'\t',end='')
-            print('\n')
         pass
 
     def waiting_Input(self):
@@ -185,6 +176,7 @@ class classMenu_Spider:
             if state:
                 if(finish_Window!=None):
                     finish_Window.close()
+                self.showing_data()
                 ready_Window.close()
                 running_Window=spider_Gui.set_running_Window(self)
                 self.creating_Word()
