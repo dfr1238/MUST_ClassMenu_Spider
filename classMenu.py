@@ -73,7 +73,7 @@ class classMenu_Spider:
         style = self.doc.styles['Normal']
         font = style.font
         font.size = Pt(12)
-        p = self.doc.add_paragraph(f'學號：{self.std_id}\t姓名：{self.std_name}')
+        p = self.doc.add_paragraph(f'學號：{self.std_id}\t姓名：{self.std_name}\t班級：')
         p.alignment = WD_ALIGN_PARAGRAPH.CENTER
         p.style = self.doc.styles['Normal']
         p = self.doc.add_paragraph(f'學年：{self.std_year}\t學期：{self.std_season}')
