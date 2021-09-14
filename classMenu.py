@@ -12,6 +12,7 @@ from docx.enum.table import WD_TABLE_ALIGNMENT,WD_ALIGN_VERTICAL
 import selenium.webdriver.support.ui as ui
 import webbrowser
 import winreg
+import pathlib
 
 class spider_Gui:
 
@@ -52,19 +53,19 @@ class classMenu_Spider:
         chrome_options.add_argument('--disable-gpu')
         if __name__ == "__main__":
 
-            if getattr(sys, 'frozen', False): 
-                chrome_driver_path = os.path.join('.\chromedriver.exe')
-                print(chrome_driver_path)
-                self.driver = webdriver.Chrome(executable_path=chrome_driver_path,options=chrome_options)
-            else:
-                try:
+            try:
+                if getattr(sys, 'frozen', False): 
+                    chrome_driver_path = '.\chromedriver.exe'
+                    print(chrome_driver_path)
+                    self.driver = webdriver.Chrome(executable_path=chrome_driver_path,options=chrome_options)
+                else:
                     self.driver = webdriver.Chrome(options=chrome_options)
-                except selenium.common.exceptions.SessionNotCreatedException:
-                    sg.popup_error('WebDriver 版本錯誤或未搜尋到，程式將下載對應 的 WebDriver。壓縮檔下載後，請將壓縮黨內的 chromedriver 放置與該程式同個目錄下',keep_on_top=True)
-                    reg_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER,r'Software\Google\Chrome\BLBeacon')
-                    ch_ver = winreg.QueryValueEx(reg_key,'version')[0]
-                    webbrowser.open(f'https://chromedriver.storage.googleapis.com/{ch_ver}/chromedriver_win32.zip', new=2)
-                    sys.exit()
+            except selenium.common.exceptions.SessionNotCreatedException or selenium.common.exceptions.WebDriverException:
+                sg.popup_error('WebDriver 版本錯誤或未搜尋到，程式將下載對應 的 WebDriver。壓縮檔下載後，請將壓縮黨內的 chromedriver 放置與該程式同個目錄下',keep_on_top=True)
+                reg_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER,r'Software\Google\Chrome\BLBeacon')
+                ch_ver = winreg.QueryValueEx(reg_key,'version')[0]
+                webbrowser.open(f'https://chromedriver.storage.googleapis.com/{ch_ver}/chromedriver_win32.zip', new=2)
+                sys.exit()
                     
         try:
             self.driver.get(self.url)
@@ -199,5 +200,13 @@ class classMenu_Spider:
                 os.startfile(docx)
                 finish_Window=spider_Gui.set_finish_Window(self)
 
-Spider = classMenu_Spider()
-Spider.waiting_Input()
+wd = pathlib.Path('.\chromedriver.exe')
+if wd.exists():
+    Spider = classMenu_Spider()
+    Spider.waiting_Input()
+else:
+    sg.popup_error('WebDriver 未搜尋到，程式將下載對應 的 WebDriver。壓縮檔下載後，請將壓縮黨內的 chromedriver 放置與該程式同個目錄下',keep_on_top=True)
+    reg_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER,r'Software\Google\Chrome\BLBeacon')
+    ch_ver = winreg.QueryValueEx(reg_key,'version')[0]
+    webbrowser.open(f'https://chromedriver.storage.googleapis.com/{ch_ver}/chromedriver_win32.zip', new=2)
+    sys.exit()
