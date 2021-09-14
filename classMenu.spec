@@ -5,7 +5,6 @@ block_cipher = None
 
 a = Analysis(['classMenu.py'],
              pathex=['C:\\Users\\dfr12\\Documents\\Coding\\Python\\MUST_ClassMenu'],
-             binaries=[('.\\chromedriver.exe', '.')],
              datas=[],
              hiddenimports=[],
              hookspath=[],

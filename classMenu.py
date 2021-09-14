@@ -51,7 +51,7 @@ class classMenu_Spider:
         if __name__ == "__main__":
 
             if getattr(sys, 'frozen', False): 
-                chrome_driver_path = os.path.join(sys._MEIPASS, 'chromedriver.exe')
+                chrome_driver_path = os.path.join('.\chromedriver.exe')
                 print(chrome_driver_path)
                 self.driver = webdriver.Chrome(executable_path=chrome_driver_path,options=chrome_options)
             else:
