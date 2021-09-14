@@ -10,6 +10,8 @@ from docx.shared import Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.table import WD_TABLE_ALIGNMENT,WD_ALIGN_VERTICAL
 import selenium.webdriver.support.ui as ui
+import webbrowser
+import winreg
 
 class spider_Gui:
 
@@ -55,7 +57,15 @@ class classMenu_Spider:
                 print(chrome_driver_path)
                 self.driver = webdriver.Chrome(executable_path=chrome_driver_path,options=chrome_options)
             else:
-                self.driver = webdriver.Chrome(options=chrome_options)
+                try:
+                    self.driver = webdriver.Chrome(options=chrome_options)
+                except selenium.common.exceptions.SessionNotCreatedException:
+                    sg.popup_error('WebDriver 版本錯誤或未搜尋到，程式將下載對應 的 WebDriver。壓縮檔下載後，請將壓縮黨內的 chromedriver 放置與該程式同個目錄下',keep_on_top=True)
+                    reg_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER,r'Software\Google\Chrome\BLBeacon')
+                    ch_ver = winreg.QueryValueEx(reg_key,'version')[0]
+                    webbrowser.open(f'https://chromedriver.storage.googleapis.com/{ch_ver}/chromedriver_win32.zip', new=2)
+                    sys.exit()
+                    
         try:
             self.driver.get(self.url)
             self.driver.maximize_window()
@@ -133,8 +143,8 @@ class classMenu_Spider:
     def check_table(self):
         try:
             wait = ui.WebDriverWait(self.driver,0.1)
-            wait.until(lambda driver: driver.find_element_by_xpath('/html/body/div[2]/div[2]/div/div[2]/div[4]/div/table'))
-            self.table_Element = self.driver.find_element_by_xpath('/html/body/div[2]/div[2]/div/div[2]/div[4]/div/table')
+            wait.until(lambda driver: driver.find_element_by_xpath('//*[@id="Windows-TOP"]/div/table'))
+            self.table_Element = self.driver.find_element_by_xpath('//*[@id="Windows-TOP"]/div/table')
             self.table_TrList = self.driver.find_elements_by_tag_name('tr')
             info = self.driver.find_element_by_xpath('/html/body/div[1]/div/div[2]/ul/li/a/span/small').text.split("\n")
             year_List= Select(self.driver.find_element_by_name('CosYear'))
